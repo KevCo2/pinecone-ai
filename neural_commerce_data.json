@@ -1,0 +1,20 @@
+{
+  "platform_name": "Neural Commerce",
+  "daily_target": 1000000,
+  "current_revenue": 216471,
+  "transactions_processed": 182,
+  "suppliers_in_network": 6260,
+  "ai_agents_active": 4,
+  "market_categories": [
+    "Electronics",
+    "Manufacturing",
+    "Automotive",
+    "Textiles"
+  ],
+  "revenue_streams": {
+    "transaction_fees": 89235,
+    "compliance_services": 40949,
+    "trade_finance": 85249,
+    "market_intelligence": 20842
+  }
+}

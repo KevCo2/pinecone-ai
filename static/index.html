@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pine Cone – The Inner Mind’s Eye</title>
+  <style>
+    body { font-family: sans-serif; background: #1a1a2e; color: white; padding: 20px; }
+    .logo { text-align: center; margin-bottom: 20px; }
+    .tabs { max-width: 800px; margin: auto; }
+    .tab-buttons button { padding: 10px; margin: 5px; }
+    .tab-content { border: 1px solid #333; padding: 10px; margin-top: 10px; }
+    .chatbox input { width: 80%; }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img src="pinecone_logo.png" width="200" alt="Pine Cone">
+    <h1><span style="color:#00FFAA;">T</span>he <span style="color:#FF8800;">I</span>nner <span style="color:#AA00FF;">M</span>ind’s <span style="color:#00FFFF;">E</span>ye</h1>
+  </div>
+
+  <div class="tabs">
+    <button onclick="createTab()">+ New Tab</button>
+    <div id="tabContents"></div>
+  </div>
+
+  <template id="tabTemplate">
+    <div class="tab-content">
+      <input class="urlBar" placeholder="Enter URL or search…" />
+      <iframe class="webview" style="width:100%; height:300px;"></iframe>
+      <div class="chatbox">
+        <input class="chatInput" placeholder="Ask Pine Cone..." />
+        <button onclick="sendMessage(this)">Ask AI</button>
+        <button onclick="startVoice(this)">🎤</button>
+        <div class="chatOutput"></div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const apiUrl = window.location.origin + '/ask';
+    function createTab() {
+      const clone = document.getElementById('tabTemplate').content.cloneNode(true);
+      document.getElementById('tabContents').appendChild(clone);
+      const wrapper = document.getElementById('tabContents').lastElementChild;
+      wrapper.querySelector('.urlBar').addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          let v = e.target.value;
+          if (!/^https?:\/\//.test(v)) v = 'http://' + v;
+          wrapper.querySelector('.webview').src = v;
+        }
+      });
+    }
+    createTab();
+
+    function sendMessage(btn) {
+      const wrapper = btn.closest('.tab-content');
+      const input = wrapper.querySelector('.chatInput');
+      const output = wrapper.querySelector('.chatOutput');
+      const msg = input.value;
+      if (!msg) return;
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg })
+      })
+        .then(r => r.json())
+        .then(d => {
+          output.innerHTML += `<p><b>You:</b> ${msg}</p><p><b>AI:</b> ${d.reply}</p>`;
+          input.value = '';
+        });
+    }
+
+    function startVoice(btn) {
+      const wrapper = btn.closest('.tab-content');
+      const input = wrapper.querySelector('.chatInput');
+      const recog = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recog.onresult = e => input.value = e.results[0][0].transcript;
+      recog.start();
+    }
+  </script>
+</body>
+</html>
