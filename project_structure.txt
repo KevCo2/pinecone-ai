@@ -1,0 +1,9 @@
+backend/
+  scraper/
+  llm/
+  api/
+frontend/
+db_schema.sql
+README.md
+requirements.txt
+venv/
