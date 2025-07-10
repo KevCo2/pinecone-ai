@@ -1,0 +1,9 @@
+scrapy
+playwright
+fastapi
+openai
+sqlalchemy
+psycopg2-binary
+stripe
+python-dotenv
+uvicorn
